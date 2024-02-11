@@ -21,6 +21,7 @@ const int led = 2; // Set LED pin as GPIO2
 /**** Serial pin Settings *******/
 #define RXD2 16
 #define TXD2 17
+const int led_pin = 5;
 
 /**** topic Settings *******/
 const char *topic = "led_state";
@@ -36,15 +37,13 @@ WebServer server(80);
 WebSocketsServer webSocket = WebSocketsServer(81);
 
 File file;
+
 String inputString = "";   // a String to hold incoming data from Serial
 String inputBTString = ""; // a String to hold incoming string from BTSerial
-String inputQRString = ""; // a String to hold incoming string from Serial2
-String qr_string = "qr";
 
-const int qr_enable = 4;
-const int qr_start = 5;
+String led_string = "led";
+bool led_active = false;
 
-bool qr_active = false;
 byte webSocketConnected = 0;
 
 unsigned long lastMsg = 0;
@@ -53,7 +52,8 @@ byte prog = 0;
 byte prog_mode = 0;
 byte prog_speed = 0;
 int loopCount = 868;
-long secCount = 0;
+long secCount = 60;
+long minCount = 0;
 
 #define MSG_BUFFER_SIZE (50)
 char msg[MSG_BUFFER_SIZE];
@@ -70,7 +70,6 @@ void setup()
 
   inputString.reserve(100);
   inputBTString.reserve(100);
-  inputQRString.reserve(100);
 
   if (SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED))
   {
@@ -149,18 +148,12 @@ void setup()
 
   webSocket.onEvent(webSocketEvent);
   // Configure web server to host HTML files
-  server.on("/qr_read_on", []() {                 // При HTTP запросе вида http://192.168.4.1/qr_read
-    server.send(200, "text/plain", qr_read_on()); // Отдаём клиенту код успешной обработки запроса, сообщаем, что формат ответа текстовый и возвращаем результат выполнения функции qr_read
+  server.on("/led_state", led_state);
+  server.on("/led_off", led_off);
+  server.on("/led_on", led_on);
+  server.onNotFound([]() {
+    if(!handleFileRead(server.uri())) server.send(404, "text/plain", "FileNotFound");
   });
-  server.on("/qr_read_off", []() {                 // При HTTP запросе вида http://192.168.4.1/qr_read
-    server.send(200, "text/plain", qr_read_off()); // Отдаём клиенту код успешной обработки запроса, сообщаем, что формат ответа текстовый и возвращаем результат выполнения функции qr_read
-  });
-  server.on("/qr_status", []() {                 // При HTTP запросе вида http://192.168.4.1/qr_status
-    server.send(200, "text/plain", qr_status()); // Отдаём клиенту код успешной обработки запроса, сообщаем, что формат ответа текстовый и возвращаем результат выполнения функции qr_status
-  });
-  server.onNotFound([]()
-                    {
-      if(!handleFileRead(server.uri())) server.send(404, "text/plain", "FileNotFound"); });
   server.begin();
   Serial.println("HTTP server started");
   ArduinoOTA.setHostname("CMU32");               // Имя хоста
@@ -197,21 +190,23 @@ void bluetoothIn()
     switch (inputBTString[0])
     {
     case '0':
-      Serial.println(qr_read_off());
+      led_off;
+      Serial.println("off");
       break;
     case '1':
-      Serial.println(qr_read_on());
+      led_on;
+      Serial.println("on");
       break;
     case '2':
     {
-      DynamicJsonDocument doc(1024);
-      doc["deviceId"] = "ledCMU";
-      doc["siteId"] = "juraspb@CMU";
-      doc["mode"] = prog_mode;
-      doc["pgm"] = prog;
-      doc["speed"] = prog_speed;
+      DynamicJsonDocument doc_tx(256);
+      doc_tx["deviceId"] = "ledCMU";
+      doc_tx["siteId"] = "juraspb@CMU";
+      doc_tx["mode"] = prog_mode;
+      doc_tx["pgm"] = prog;
+      doc_tx["speed"] = prog_speed;
       char mqtt_message[128];
-      serializeJson(doc, mqtt_message);
+      serializeJson(doc_tx, mqtt_message);
       publishMessage("ledCMU_mode", mqtt_message, true);
       break;
     }
@@ -259,21 +254,32 @@ consoleaction action = show;
 
 void loop()
 {
-
   if (--loopCount == 0)
   {
-    loopCount = 868; // Секунда
     digitalWrite(led, 0);
-    Serial2.printf("Sec =%d", secCount++);
-    Serial2.println();
-    // Serial2.write(secCount);
+    loopCount = 868; // Секунда
+
+    
+    if (--secCount==0) {
+      secCount = 60;
+      minCount++;
+    }
+
+    DynamicJsonDocument doc_tx(128);
+    doc_tx["min"] = String(minCount);
+    doc_tx["sec"] = String(60-secCount);
+    char time_message[128];
+    serializeJson(doc_tx, time_message);
+    webSocket.broadcastTXT(time_message);
+    
+    //Serial2.printf("Sec =%d", secCount);
+    //Serial2.println();
+    //Serial2.write(secCount);
     digitalWrite(led, 1);
   }
-
   client.loop();
   ftpSrv.handleFTP();
-  if (SerialBT.available())
-    bluetoothIn();
+  if (SerialBT.available()) bluetoothIn();
   server.handleClient();
   webSocket.loop();
   ArduinoOTA.handle();
@@ -349,67 +355,84 @@ uint16_t ListDir(const char *path)
   return dirCount;
 }
 
-String qr_read_on()
-{ // Функция переключения реле
-  qr_active = true;
-  digitalWrite(qr_start, 0);
-  return String("1");
+void led_on()
+{ 
+  led_active = true;
+  digitalWrite(led_pin, 0);
+  server.send(200, "text/plain","on");
 }
 
-String qr_read_off()
-{ // Функция переключения реле
-  qr_active = false;
-  digitalWrite(qr_start, 1);
-  return String("0");
+void led_off()
+{ 
+  led_active = false;
+  digitalWrite(led_pin, 1);
+  server.send(200, "text/plain","off");
 }
 
-String qr_status()
+void led_state()
 { // Функция для определения текущего статуса реле
-  byte state;
-  if (digitalRead(qr_start)) // Если на пине реле высокий уровень
-    state = 1;               //  то запоминаем его как единицу
-  else                       // иначе
-    state = 0;               //  запоминаем его как ноль
-  Serial.println("stat");
-  return String(state); // возвращаем результат, преобразовав число в строку
+  String state;
+  if (digitalRead(led_pin)) 
+    state = "on"; 
+  else         
+    state = "off";  
+  Serial.println("led_status="+state);
+  server.send(200, "text/plain", state); // возвращаем результат, преобразовав число в строку
 }
 
 // A function to handle our incoming sockets messages
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t lenght)
 {
-
   switch (type)
   {
   // Runs when a user disconnects
   case WStype_DISCONNECTED:
   {
-    Serial.printf("User #%u - Disconnected!\n", num);
+    Serial2.printf("User #%u - Disconnected!\n", num);
     if (webSocketConnected > 0)
       webSocketConnected--;
-    Serial.println(webSocketConnected);
+    Serial2.println(webSocketConnected);
     break;
   }
   // Runs when a user connects
   case WStype_CONNECTED:
   {
     IPAddress ip = webSocket.remoteIP(num);
-    Serial.printf("--- Connection. IP: %d.%d.%d.%d Namespace: %s UserID: %u\n", ip[0], ip[1], ip[2], ip[3], payload, num);
-    Serial.println();
+    Serial2.printf("--- Connection. IP: %d.%d.%d.%d Namespace: %s UserID: %u\n", ip[0], ip[1], ip[2], ip[3], payload, num);
+    Serial2.println();
     // Send last pot value on connect
-    webSocket.broadcastTXT(qr_string);
+    webSocket.broadcastTXT(led_string);
     webSocketConnected++;
-    Serial.println(webSocketConnected);
+    Serial2.println(webSocketConnected);
     break;
   }
   // Runs when a user sends us a message
   case WStype_TEXT:
   {
-    String incoming = "";
-    for (int i = 0; i < lenght; i++)
-    {
-      incoming.concat((char)payload[i]);
+    DynamicJsonDocument doc_rx(128);
+    DeserializationError err = deserializeJson(doc_rx, payload);
+    if (err) {
+      Serial.print(F("deserializeJson() failed: "));
+      Serial.println(err.f_str());
     }
-    uint8_t deg = incoming.toInt();
+    else {
+      auto s = String(doc_rx["device"].as<const char*>());
+      if (s=="btn") {
+        auto str = String(doc_rx["id"].as<const char*>());
+        String s3 = "";
+        str.copy(s3,4,5);
+        //int btnNum;
+        Serial2.println(str+':'+s3);
+      }
+      else {
+        String incoming = "";
+        for (int i = 0; i < lenght; i++) 
+        {
+          incoming.concat((char)payload[i]);
+        }
+        Serial2.println(incoming);
+      }
+    }
     break;
   }
   }

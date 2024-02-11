@@ -1,74 +1,89 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>QR Reader</title>
-    <link rel="stylesheet" href="style.css">
-	<link rel="icon" href="favicon.ico" type="image/x-icon">
-  </head>
-  <body>
-	<div class="qrtxt">QRcode:</div>
-	<div id="QRcode" class="qrtxt">wait</div>
-	<input type="button" id="read_button" class="read_off" /></br>
+<html lang="en">
 
-  <input type="checkbox" id="cb1" onchange="fun1()" Пример checkbox></br>
-	
-  <label id="combo1-label" class="combo-label">Read-only Select</label>
-  <div class="combo js-select">
-    <div
-         aria-activedescendant=""
-         aria-autocomplete="none"
-         aria-controls="listbox1"
-         aria-expanded="false"
-         aria-haspopup="listbox"
-         aria-labelledby="combo1-label"
-         id="combo1"
-         class="combo-input"
-         role="combobox"
-         tabindex="0"
-         ></div>
-    <div class="combo-menu" role="listbox" id="listbox1"></div>
-  </div>
-   
-  <label for="combo2" class="combo-label">Editable Combobox</label>
-  <div class="combo js-combobox">
-    <input
-           aria-activedescendant=""
-           aria-autocomplete="none"
-           aria-controls="listbox2"
-           aria-expanded="false"
-           aria-haspopup="listbox"
-           id="combo2"
-           class="combo-input"
-           role="combobox"
-           type="text"
-           />
-    <div class="combo-menu" role="listbox" id="listbox2"></div>
-  </div>
-   
-  <label id="combo3-label" class="combo-label">Multi-select Combobox</label>
-  <span id="combo3-remove" style="display: none">remove</span>
-  <ul class="selected-options" id="combo3-selected"></ul>
-  <div class="combo js-multiselect">
-    <input
-           aria-activedescendant=""
-           aria-autocomplete="none"
-           aria-controls="listbox3"
-           aria-expanded="false"
-           aria-haspopup="listbox"
-           aria-labelledby="combo3-label combo3-selected"
-           id="combo3"
-           class="combo-input"
-           role="combobox"
-           type="text"
-           />
-    <div class="combo-menu" role="listbox" id="listbox3"></div>
-  </div>
-   
-	<!-- Canvas which will contain the dial -->
-    <canvas id="dial"></canvas>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Цветомузыкальный контроллер</title>
+	<link rel="stylesheet" type="text/css" href="header_footer.css" />
+	<link rel="stylesheet" type="text/css" href="main.css" />
+</head>
 
-    <!-- Include our js file at the bottom -->
-    <script src="main.js" charset="utf-8"></script>
-  </body>
+<body>
+	<header class="container-fluid">
+		<div class="container d-flex">
+			<img src="cmu_launcher.png" alt="" />
+			<nav class="menu">
+				<a href="#" class="active">Музыкальные</a>
+				<a href="#">Динамические</a>
+				<a href="#">Цвет:<input type="color" value="#FFFFFF" /></a>
+			</nav>
+		</div>
+	</header>
+	<main class="container-fluid">
+		<div class="container softpage">
+			<div class="block1 left">
+				<nav class="soft muz-soft">
+					<input type="button" id="btn_1" value="РАДУГА" />
+					<input type="button" id="btn_2" value="СТАВР" />
+					<input type="button" id="btn_3" value="МАГИЯ" />
+					<input type="button" id="btn_4" value="ШАРМ" />
+					<input type="button" id="btn_5" value="МИКС" />
+				</nav>
+			</div>
+			<div class="block1 center1">
+				<nav class="soft din-soft">
+					<input type="button" id="btn_6" value="ranbow" />
+					<input type="button" id="btn_7" value="stavr" />
+					<input type="button" id="btn_8" value="magic" />
+					<input type="button" id="btn_9" value="sharm" />
+					<input type="button" id="btn_10" value="mix" />
+				</nav>
+			</div>
+			<div class="block1 center2">
+				<nav class="soft din-soft">
+					<input type="button" id="btn_11" value="ranbow" />
+					<input type="button" id="btn_12" value="stavr" />
+					<input type="button" id="btn_13" value="magic" />
+					<input type="button" id="btn_14" value="sharm" />
+					<input type="button" id="btn_15" value="mix" />
+				</nav>
+			</div>
+			<div class="block1 right">
+				<nav class="soft din-soft">
+					<input type="range" value="50" />
+					<input type="range" value="50" />
+					<input type="number" value="100" />
+					<input type="image" src="find.png" value="СТАВР" />
+					<p>Время: <span id="minTime"></span>:<span id="secTime"></span></p>
+				</nav>
+			</div>
+		</div>
+	</main>
+	<footer class="container-fluid">
+		<div class="container d-flex">
+			<div class="left d-flex">
+				<nav>
+					<a class="active" href="#">Настройка</a>
+					<a href="#">О устройстве</a>
+					<a href="#">О программе</a>
+					<a href="#">Контакты</a>
+				</nav>
+			</div>
+			<div class="right">
+				<div>
+					<div class="d-flex">
+						<a href="#" class="box telegram"></a>
+						<a href="#" class="box wtsp"></a>
+						<a href="#" class="box email"></a>
+					</div>
+					<p>&copy Все права защищены. 2024</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script src="main.js" charset="utf-8"></script>
+</body>
+
 </html>

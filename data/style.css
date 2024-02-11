@@ -1,7 +1,7 @@
 body {
-  background-color: #EEE;
-  text-align: center;
-  padding: 30px;
+	background-color: #EEE;
+	text-align: center;
+	padding: 30px;
 }
 
 input[type="button"] {
@@ -10,23 +10,24 @@ input[type="button"] {
 	margin-top: 10px;
 	border: none;
 	background-color: transparent;
-	outline:none;
+	outline: none;
 	display: inline-block;
 	width: 300px;
 	height: 130px;
 }
 
 .qrtxt {
-  text-align: center;
-  font: bold 40px arial;
-  background-color: #990099;
-  color: #FFFF00;
+	text-align: center;
+	font: bold 40px arial;
+	background-color: #990099;
+	color: #FFFF00;
 }
 
 .read_on {
 	background-image: url('sprite.png');
 	background-position: 0px 0px;
 }
+
 .read_off {
 	background-image: url('sprite.png');
 	background-position: -300px 0px;
@@ -38,7 +39,7 @@ input[type="button"] {
 	max-width: 400px;
 	position: relative;
 }
-   
+
 .combo::after {
 	border-bottom: 2px solid rgba(0, 0, 0, 0.5);
 	border-right: 2px solid rgba(0, 0, 0, 0.5);
@@ -52,7 +53,7 @@ input[type="button"] {
 	transform: translate(0, -65%) rotate(45deg);
 	width: 12px;
 }
-   
+
 .combo-input {
 	background-color: #f5f5f5;
 	border: 2px solid rgba(0, 0, 0, 0.5);
@@ -64,24 +65,24 @@ input[type="button"] {
 	text-align: left;
 	width: 100%;
 }
-   
-  .open .combo-input {
+
+.open .combo-input {
 	border-radius: 4px 4px 0 0;
 }
-   
+
 .combo-input:focus {
 	border-color: #e60023;
 	box-shadow: 0 0 4px 2px #e60023;
 	outline: 5px solid transparent;
 }
-   
+
 .combo-label {
 	display: block;
-	font-size: 20px;
-	font-weight: 100;
-	margin-bottom: 0.25em;
+	font-size: 10px;
+	font-weight: 10;
+	margin-bottom: 20px;
 }
-   
+
 .combo-menu {
 	background-color: #f5f5f5;
 	border: 1px solid rgba(0, 0, 0, 0.42);
@@ -95,25 +96,25 @@ input[type="button"] {
 	width: 100%;
 	z-index: 100;
 }
-   
+
 .open .combo-menu {
 	display: block;
 }
-   
+
 .combo-option {
 	padding: 10px 12px 12px;
 }
-   
+
 .combo-option.option-current,
 .combo-option:hover {
 	background-color: rgba(0, 0, 0, 0.1);
 }
-   
+
 .combo-option.option-selected {
-	padding-right: 30px;
+	padding-right: 20px;
 	position: relative;
 }
-   
+
 .combo-option.option-selected::after {
 	border-bottom: 2px solid #000;
 	border-right: 2px solid #000;
@@ -125,19 +126,19 @@ input[type="button"] {
 	transform: translate(0, -50%) rotate(45deg);
 	width: 8px;
 }
-   
+
 .selected-options {
 	list-style-type: none;
 	margin: 0;
 	max-width: 400px;
 	padding: 0;
 }
-   
+
 .selected-options li {
 	display: inline-block;
 	margin-bottom: 5px;
 }
-   
+
 .remove-option {
 	background-color: #ff3d3d;
 	border: 1px solid #ff3d3d;
@@ -150,13 +151,13 @@ input[type="button"] {
 	padding: 0.25em 1.75em 0.25em 0.25em;
 	position: relative;
 }
-   
+
 .remove-option:focus {
 	border-color: #baa1dd;
 	box-shadow: 0 0 3px 1px #ff3d3d;
 	outline: 3px solid transparent;
 }
-   
+
 .remove-option::before,
 .remove-option::after {
 	border-right: 2px solid #fff;
@@ -167,17 +168,17 @@ input[type="button"] {
 	top: 50%;
 	width: 0;
 }
-   
+
 .remove-option::before {
 	transform: translate(0, -50%) rotate(45deg);
 }
-   
+
 .remove-option::after {
 	transform: translate(0, -50%) rotate(-45deg);
 }
 
 /* Define dial size */
 #dial {
-  width: 300px;
-  height: 300px;
+	width: 400px;
+	height: 400px;
 }

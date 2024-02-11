@@ -1,0 +1,129 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-style: normal;
+	width: 100%;
+	font-size: 16px;
+}
+
+.container {
+	max-width: auto;
+	margin: 0 auto;
+}
+
+.container-fluid {
+	width: 100%;
+}
+
+.d-flex {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+header>.container {
+	background-color: rgb(100, 100, 100);
+	padding: 20px 20px;
+}
+
+header>.container>.menu>a {
+	margin: 0px 40px;
+	font-size: 1.6em;
+	font-weight: normal;
+	text-decoration: none;
+	color: rgb(255, 255, 255);
+}
+
+header .container .menu a:hover,
+header .container .menu a.active {
+	color: rgb(222, 193, 26);
+	/* font-size: 1.5em; */
+	padding-bottom: 5px;
+	border-bottom: 3px solid rgb(222, 193, 26);
+}
+
+footer {
+	background-color: rgb(100, 100, 100);
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+footer .right {
+	width: 50%;
+	align-items: flex-start;
+}
+
+footer .left {
+	width: 50%;
+}
+
+footer .right p {
+	font-size: 0.8em;
+	margin-top: 5%;
+}
+
+footer .left nav {
+	width: 100%;
+	margin-left: 10%;
+}
+
+footer .left nav a {
+	color: #ffffff;
+	font-size: 1.6em;
+	font-weight: normal;
+	display: block;
+	margin-bottom: 12px;
+	text-decoration: none;
+}
+
+footer .left nav a:hover,
+footer .left nav a.active {
+	color: rgb(222, 193, 26);
+}
+
+footer .right>div {
+	text-align: center;
+	font-size: 1.6em;
+	color: rgb(255, 255, 255);
+}
+
+footer .right .box {
+	width: 30%;
+	height: 80px;
+}
+
+footer .right .telegram {
+	background: url(tlgr.png) no-repeat;
+	background-position: center;
+}
+
+footer .right .wtsp {
+	background: url(wats.png) no-repeat;
+	background-position: center;
+}
+
+footer .right .email {
+	background: url(email.png) no-repeat;
+	background-position: center;
+}
+
+footer .right .telegram:hover {
+	background: url(tlgrOn.png) no-repeat;
+	background-position: center;
+}
+
+footer .right .wtsp:hover {
+	background: url(watsOn.png) no-repeat;
+	background-position: center;
+}
+
+footer .right .email:hover {
+	background: url(emailOn.png) no-repeat;
+	background-position: center;
+}
